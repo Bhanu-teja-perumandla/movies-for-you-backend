@@ -4,6 +4,8 @@ import com.moviesforyou.model.Movie;
 import com.moviesforyou.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,5 +28,10 @@ public class MovieController {
   @GetMapping("/movies")
   public List<Movie> getAllMovies() {
     return movieService.getAllMovies();
+  }
+
+  @PostMapping("/add")
+  public Movie addMovie(@RequestBody Movie movie) {
+    return movieService.addMovie(movie);
   }
 }

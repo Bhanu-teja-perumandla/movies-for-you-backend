@@ -17,4 +17,8 @@ public class MovieService {
   public List<Movie> getAllMovies() {
     return movieRepository.findAll();
   }
+
+  public Movie addMovie(Movie movie) {
+    return movieRepository.save(movie);
+  }
 }

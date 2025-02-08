@@ -30,4 +30,12 @@ class MovieServiceTest {
     assertThat(movieService.getAllMovies()).isEqualTo(movies);
     verify(movieRepository).findAll();
   }
+
+  @Test
+  void shouldAddMovie() {
+    Movie movie = getTestMovie();
+    when(movieRepository.save(movie)).thenReturn(movie);
+    assertThat(movieService.addMovie(movie)).isEqualTo(movie);
+    verify(movieRepository).save(movie);
+  }
 }

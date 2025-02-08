@@ -30,4 +30,12 @@ class MovieControllerTest {
     assertThat(movieController.getAllMovies()).isEqualTo(movies);
     Mockito.verify(movieService).getAllMovies();
   }
+
+  @Test
+  void shouldAddMovie() {
+    Movie movie = getTestMovie();
+    when(movieService.addMovie(movie)).thenReturn(movie);
+    assertThat(movieController.addMovie(movie)).isEqualTo(movie);
+    Mockito.verify(movieService).addMovie(movie);
+  }
 }
