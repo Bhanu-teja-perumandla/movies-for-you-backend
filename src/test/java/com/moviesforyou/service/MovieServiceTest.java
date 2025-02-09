@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.moviesforyou.service.MovieService.getLoadData;
 import static com.moviesforyou.utils.TestData.getTestMovie;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -37,5 +38,13 @@ class MovieServiceTest {
     when(movieRepository.save(movie)).thenReturn(movie);
     assertThat(movieService.addMovie(movie)).isEqualTo(movie);
     verify(movieRepository).save(movie);
+  }
+
+  @Test
+  void shouldLoadDefaultMovies() {
+    List<Movie> movies = getLoadData();
+    when(movieRepository.saveAll(movies)).thenReturn(movies);
+    assertThat(movieService.loadMovies()).isEqualTo(movies);
+    verify(movieRepository).saveAll(movies);
   }
 }

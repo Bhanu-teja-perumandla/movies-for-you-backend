@@ -10,7 +10,6 @@ import java.util.List;
 
 import static com.moviesforyou.utils.TestData.getTestMovie;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class MovieControllerTest {
@@ -37,5 +36,13 @@ class MovieControllerTest {
     when(movieService.addMovie(movie)).thenReturn(movie);
     assertThat(movieController.addMovie(movie)).isEqualTo(movie);
     Mockito.verify(movieService).addMovie(movie);
+  }
+
+  @Test
+  void shouldLoadSomeMovieDetails() {
+    List<Movie> movies = List.of(getTestMovie());
+    when(movieService.loadMovies()).thenReturn(movies);
+    assertThat(movieController.loadMovies()).isEqualTo(movies);
+    Mockito.verify(movieService).loadMovies();
   }
 }

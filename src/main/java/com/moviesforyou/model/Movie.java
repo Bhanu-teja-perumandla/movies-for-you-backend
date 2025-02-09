@@ -15,4 +15,6 @@ public class Movie {
   private long id;
   private String title;
   private String description;
+  private float rating;
+  private String poster;
 }
