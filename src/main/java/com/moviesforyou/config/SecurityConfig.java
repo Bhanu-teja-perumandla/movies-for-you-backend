@@ -1,5 +1,6 @@
 package com.moviesforyou.config;
 
+import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -23,11 +25,13 @@ public class SecurityConfig {
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final String clientUrl;
+  private final JwtFilter jwtFilter;
 
-  public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, @Value("${CLIENT_URL}") String clientUrl) {
+  public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, @Value("${CLIENT_URL}") String clientUrl, JwtFilter jwtFilter) {
     this.userDetailsService = userDetailsService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.clientUrl = clientUrl;
+    this.jwtFilter = jwtFilter;
   }
 
   @Bean
@@ -39,6 +43,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(a-> a
             .requestMatchers("register", "login", "movies").permitAll()
             .anyRequest().authenticated())
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .cors(c-> c.configurationSource(request -> {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
           corsConfiguration.addAllowedOrigin(clientUrl);
