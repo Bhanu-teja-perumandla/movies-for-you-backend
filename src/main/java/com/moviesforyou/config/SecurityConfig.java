@@ -34,7 +34,9 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .httpBasic(Customizer.withDefaults())
         .sessionManagement(s-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(a-> a.anyRequest().authenticated())
+        .authorizeHttpRequests(a-> a
+            .requestMatchers("register", "movies").permitAll()
+            .anyRequest().authenticated())
         .cors(c-> c.configurationSource(request -> {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
           corsConfiguration.addAllowedOrigin(clientUrl);
