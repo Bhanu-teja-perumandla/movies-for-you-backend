@@ -3,6 +3,7 @@ package com.moviesforyou.controller;
 import com.moviesforyou.model.Movie;
 import com.moviesforyou.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,5 +40,11 @@ public class MovieController {
   @PutMapping("/load")
   public List<Movie> loadMovies() {
     return movieService.loadMovies();
+  }
+
+  @DeleteMapping("/remove")
+  public boolean deleteMovies(@RequestBody List<Long> ids) {
+    movieService.deleteMovies(ids);
+    return true;
   }
 }

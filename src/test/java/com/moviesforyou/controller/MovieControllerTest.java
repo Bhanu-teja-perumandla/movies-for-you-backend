@@ -10,6 +10,8 @@ import java.util.List;
 
 import static com.moviesforyou.utils.TestData.getTestMovie;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class MovieControllerTest {
@@ -44,5 +46,14 @@ class MovieControllerTest {
     when(movieService.loadMovies()).thenReturn(movies);
     assertThat(movieController.loadMovies()).isEqualTo(movies);
     Mockito.verify(movieService).loadMovies();
+  }
+
+  @Test
+  void shouldDeleteMovies() {
+    Movie testMovie = getTestMovie();
+    List<Long> ids = List.of(testMovie.getId());
+    doNothing().when(movieService).deleteMovies(ids);
+    assertThat(movieController.deleteMovies(ids)).isTrue();
+    verify(movieService).deleteMovies(ids);
   }
 }

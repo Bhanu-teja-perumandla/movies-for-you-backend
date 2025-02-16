@@ -35,4 +35,8 @@ public class MovieService {
         new Movie(5L, "The Shawshank Redemption", "A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.", 9.3f, "https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg")
         );
   }
+
+  public void deleteMovies(List<Long> ids) {
+    movieRepository.deleteAllById(ids);
+  }
 }

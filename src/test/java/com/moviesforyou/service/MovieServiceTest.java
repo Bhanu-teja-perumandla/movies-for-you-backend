@@ -10,6 +10,7 @@ import java.util.List;
 import static com.moviesforyou.service.MovieService.getLoadData;
 import static com.moviesforyou.utils.TestData.getTestMovie;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,5 +47,13 @@ class MovieServiceTest {
     when(movieRepository.saveAll(movies)).thenReturn(movies);
     assertThat(movieService.loadMovies()).isEqualTo(movies);
     verify(movieRepository).saveAll(movies);
+  }
+
+  @Test
+  void shouldDeleteMovies() {
+    List<Long> ids = List.of(getTestMovie().getId());
+    doNothing().when(movieRepository).deleteAllById(ids);
+    movieService.deleteMovies(ids);
+    verify(movieRepository).deleteAllById(ids);
   }
 }
