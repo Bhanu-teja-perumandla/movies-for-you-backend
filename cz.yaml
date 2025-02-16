@@ -1,0 +1,35 @@
+commitizen:
+  name: cz_customize
+  customize:
+    example: "[PLM-67] ✨ Feature: Add caching [Tom/Jerry]"
+    message_template: "{{change_type}}:{% if message %} {{message}}{% endif %}{% if pair %} [{{pair}}]{% endif %} \n {% for coauthor in coauthors %} {{ coauthor }} {% endfor %}"
+    questions:
+      - type: list
+        name: change_type
+        choices:
+          - value: ✨ Feature
+            name: '✨  Feature     : New feature.'
+          - value: 🐞 Fix
+            name: '🐞  Fix         : Bug fix.'
+          - value: 📚 Docs
+            name: '📚  Docs        : Documentation only changes.'
+          - value: 🐎 Performance
+            name: '🐎  Performance : Code change that improves performance.'
+          - value: ✅ Test
+            name: '✅  Test        : Adding missing tests or correcting existing tests.'
+          - value: 🔨 Refactor
+            name: '🔨  Refactor    : Code change that neither fixes a bug nor adds a feature.'
+          - value: 🚧 Chore
+            name: '🚧  Chore       : Other changes that do not modify src or test files.'
+          - value: ♻️ CI
+            name: '♻️   CI          : Changes to our CI configuration files and scripts.'
+        message: Select the type of change you are committing
+      - type: input
+        name: message
+        message: "Enter commit message: "
+      - type: checkbox
+        name: coauthors
+        message: "Select the co-authors: "
+        choices:
+          - value: "\nCo-authored-by: user-name <user-email>"
+            name: "user-name"
