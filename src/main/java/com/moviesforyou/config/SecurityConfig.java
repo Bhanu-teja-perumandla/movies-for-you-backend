@@ -3,9 +3,11 @@ package com.moviesforyou.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,7 +37,7 @@ public class SecurityConfig {
         .httpBasic(Customizer.withDefaults())
         .sessionManagement(s-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(a-> a
-            .requestMatchers("register", "movies").permitAll()
+            .requestMatchers("register", "login", "movies").permitAll()
             .anyRequest().authenticated())
         .cors(c-> c.configurationSource(request -> {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -54,5 +56,11 @@ public class SecurityConfig {
         .setUserDetailsService(userDetailsService);
     daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
     return daoAuthenticationProvider;
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+      throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
   }
 }
