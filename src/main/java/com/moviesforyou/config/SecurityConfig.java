@@ -19,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -48,7 +50,7 @@ public class SecurityConfig {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
           corsConfiguration.addAllowedOrigin(clientUrl);
           corsConfiguration.addAllowedHeader("*");
-          corsConfiguration.addAllowedMethod("GET");
+          corsConfiguration.addAllowedMethod("*");
           return corsConfiguration;
         }));
     return httpSecurity.build();

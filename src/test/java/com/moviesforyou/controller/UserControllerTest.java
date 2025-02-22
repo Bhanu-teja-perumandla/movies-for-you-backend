@@ -1,17 +1,19 @@
 package com.moviesforyou.controller;
 
+import com.moviesforyou.model.LoginResponse;
+import com.moviesforyou.model.RegisterResponse;
 import com.moviesforyou.model.User;
 import com.moviesforyou.service.JwtService;
 import com.moviesforyou.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -34,11 +36,23 @@ AuthenticationManager authenticationManager;
   @Test
   void shouldRegisterUser() {
     User user = mock(User.class);
-    when(user.getUsername()).thenReturn("username");
+    String username = "username";
+    when(user.getUsername()).thenReturn(username);
+    when(userService.findUser(username)).thenReturn(false);
     when(userService.registerUser(user)).thenReturn(user);
-    String actual = userController.register(user);
-    assertThat(actual).isEqualTo(user.getUsername());
+    assertThat(userController.register(user)).isEqualTo(ResponseEntity.status(HttpStatus.CREATED).body(new RegisterResponse("User created: username")));
+    verify(userService).findUser(username);
     verify(userService).registerUser(user);
+  }
+
+  @Test
+  void shouldNotRegisterUserIfAlreadyExists() {
+    User user = mock(User.class);
+    String username = "username";
+    when(user.getUsername()).thenReturn(username);
+    when(userService.findUser(username)).thenReturn(true);
+    assertThat(userController.register(user)).isEqualTo(ResponseEntity.status(HttpStatus.CONFLICT).body(new RegisterResponse("User already exists")));
+    verify(userService).findUser(username);
   }
 
   @Test
@@ -49,6 +63,7 @@ AuthenticationManager authenticationManager;
     Authentication authentication = mock(Authentication.class);
     UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(username, password);
+    LoginResponse expected = new LoginResponse("token", "login successful");
 
     when(user.getUsername()).thenReturn(username);
     when(user.getPassword()).thenReturn(password);
@@ -56,8 +71,7 @@ AuthenticationManager authenticationManager;
     when(authentication.isAuthenticated()).thenReturn(true);
     when(jwtService.generateToken(username)).thenReturn("token");
 
-    String actual = userController.login(user);
-    assertThat(actual).isEqualTo("token");
+    assertThat(userController.login(user)).isEqualTo(expected);
     verify(authenticationManager).authenticate(authenticationToken);
     verify(authentication).isAuthenticated();
     verify(jwtService).generateToken(username);
@@ -77,8 +91,7 @@ AuthenticationManager authenticationManager;
     when(authenticationManager.authenticate(authenticationToken)).thenReturn(authentication);
     when(authentication.isAuthenticated()).thenReturn(false);
 
-    String actual = userController.login(user);
-    assertThat(actual).isEqualTo("Login Failed :(");
+    assertThat( userController.login(user)).isEqualTo(new LoginResponse(null, "login failed :("));
     verify(authenticationManager).authenticate(authenticationToken);
     verify(authentication).isAuthenticated();
     verifyNoMoreInteractions(jwtService, authenticationManager, authentication);

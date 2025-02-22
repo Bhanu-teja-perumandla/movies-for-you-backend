@@ -50,4 +50,20 @@ class UserServiceTest {
     verify(bCryptPasswordEncoder).encode(user.getPassword());
     verify(user).setPassword("encodedPassword");
   }
+
+  @Test
+  void shouldReturnTrueIfUserExists() {
+    String username = "username";
+    when(userRepository.findByUsername(username)).thenReturn(mock(User.class));
+    assertThat(userService.findUser(username)).isTrue();
+    verify(userRepository).findByUsername(username);
+  }
+
+  @Test
+  void shouldReturnFalseIfUserDoesNotExists() {
+    String username = "username";
+    when(userRepository.findByUsername(username)).thenReturn(null);
+    assertThat(userService.findUser(username)).isFalse();
+    verify(userRepository).findByUsername(username);
+  }
 }
